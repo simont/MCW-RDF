@@ -8,7 +8,7 @@ require 'GeneRecord';
 
 #parse file from command line
 
-file_name = ARGV[0] || "./spec/files/GENES_RAT.txt"
+file_name = ARGV[0] || "../spec/files/GENES_RAT.txt"
 
 headings = String.new
 records = Array.new
