@@ -22,7 +22,7 @@ class GeneRecord
 
   def parse_data
     @headers.each do |h|
-      if @fields_to_parse.include?(h)
+      if @fields_to_parse.include?(h) && @raw_data[@headers.index(h)] != nil
         @data[h] = @raw_data[@headers.index(h)].strip
       end
     end
