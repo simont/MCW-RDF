@@ -1,6 +1,6 @@
 # GeneRecord_spec.rb
 
-require 'GeneRecord'
+require File.dirname(__FILE__) + '/../RGD/GeneRecord'
 
 describe "GeneRecord data parsing" do
 
