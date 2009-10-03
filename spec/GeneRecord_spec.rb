@@ -112,3 +112,18 @@ describe "Parsing other xrefs" do
       ]
   end
 end
+
+
+describe "it should put out ancilliary RDF too" do
+  
+  before(:each) do
+    @record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC\rGENE_TYPE","1000\tAbc1\tthe gene\tinfo about gene\tprotein-coding")
+  end  
+
+  
+  it "should output bio2rdf#subtype data" do
+    output = @record.process_GENE_TYPE('protein-coding')
+    output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#subType> \"protein-coding\" ."]
+  end
+  
+end

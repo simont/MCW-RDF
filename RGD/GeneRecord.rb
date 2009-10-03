@@ -8,7 +8,7 @@ class GeneRecord
     @data = Hash.new
 
     # list of data to parse from the file
-    @fields_to_parse = ['GENE_RGD_ID','SYMBOL','NAME','GENE_DESC','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','UNCURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN']
+    @fields_to_parse = ['GENE_RGD_ID','SYMBOL','NAME','GENE_DESC','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','UNCURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN', "GENE_TYPE"]
 
     # Parse the data into the data hash
     parse_data
@@ -37,7 +37,7 @@ class GeneRecord
 
   def to_rdf
     output = Array.new
-    ['GENE_RGD_ID','SYMBOL','NAME','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN'].each do |field|
+    ['GENE_RGD_ID','SYMBOL','NAME','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN','GENE_TYPE'].each do |field|
       output << process_field(field, data[field])
     end
 
@@ -70,6 +70,8 @@ class GeneRecord
         output << process_UNIPROT_ID(data)
       elsif field == "GENBANK_PROTEIN" || field == "GENBANK_NUCLEOTIDE"         
         output << process_GENBANK(data)
+      elsif field == "GENE_TYPE"      
+        output << process_GENE_TYPE(data)
       end
     end
     
@@ -78,8 +80,6 @@ class GeneRecord
   
   def process_GENE_RGD_ID(rgdid)
     output = Array.new
-    
-    output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#subType>", "\"Gene\"", "."].join(' ') )
     output.push( [self.subject, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://bio2rdf.org/ns/rgd#Gene>", "."].join(' ') )
     output.push( [self.subject, "<http://purl.org/dc/elements/1.1/identifier>", "\"rgd:#{@data['GENE_RGD_ID']}\"", "."].join(' ') )
     output.push( [self.subject, "<http://www.w3.org/2002/07/owl#sameAs>", "<http://bio2rdf.org/rgd:#{@data['GENE_RGD_ID']}>", "."].join(' ') )
@@ -154,4 +154,11 @@ class GeneRecord
       end
       return output
     end
+    
+    def process_GENE_TYPE(type)
+      output = Array.new
+      output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#subType>", "\"#{type}\"", "."].join(' ') )
+      return output
+    end
+    
 end
