@@ -21,8 +21,11 @@ File.open(file_name,"r") do |file|
     if headings == ""
       headings = line
     else
-      records << GeneRecord.new(headings,line)
+      if line != ""
+        records << GeneRecord.new(headings,line)
+      end
     end
+    # puts "Records: #{records.size}"
   end
 end
 
