@@ -1,0 +1,16 @@
+.svn
+*~
+.DS_Store
+doc/api
+doc/app
+tmp/[^.]*
+log/[^.]*
+config/database.yml
+config/settings.yml
+public/images/snp_tmp_*.gif
+public/images/haplotype_images/[^.]*
+coverage
+public/images/tuneup
+public/javascripts/tuneup
+public/stylesheets/tuneup
+data
