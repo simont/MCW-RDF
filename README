@@ -1,0 +1,1 @@
+This repository is being created to hold code and other materials related to the generation of RDF data from the Twigger group at the Medical College of Wisconsin (MCW). Our first area of interest is providing RDFizers for data produced by the Rat Genome Database (http://rgd.mcw.edu) so that it can be made available for others to use in the RDF format.
