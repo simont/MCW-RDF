@@ -33,16 +33,18 @@ end
 
 describe "GeneRecord to RDF" do
 
+  before(:each) do
+    @record =  GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
+  end
+
   it "should make the subject a URI based on the RGD ID" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1001\ttext2\tthe gene\tinfo about gene")
-    record.subject.should == "<http://bio2rdf.org/rgd:1001>"
+    @record.subject.should == "<http://bio2rdf.org/rgd:1000>"
   end
   
   # 727913  A3galt2 alpha 1,3-galactosyltransferase 2 UDP-galactose: beta-d-galactosyl-1,4-glucosylceramide alpha-1, 3-galactosyltransferase; involved in the synthesis of the isoglobo-series of glycosphingolipids
   
   it "should convert the name to appropriate RDF" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_NAME("alpha 1,3-galactosyltransferase")
+    output = @record.process_NAME("alpha 1,3-galactosyltransferase")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://purl.org/dc/elements/1.1/title> \"alpha 1,3-galactosyltransferase\" ."]
   end
 
@@ -50,15 +52,17 @@ end
 
 describe "Parsing PMIDS" do
   
+  before(:each) do
+    @record =  GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
+  end
+  
   it "should parse a single PMID correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_CURATED_REF_PUBMED_ID("12335")
+    output = @record.process_CURATED_REF_PUBMED_ID("12335")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPubMed> <http://bio2rdf.org/pubmed:12335> ."]
   end
   
   it "should parse a list of PMIDs correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_CURATED_REF_PUBMED_ID("12335, 54321,678910")
+    output = @record.process_CURATED_REF_PUBMED_ID("12335, 54321,678910")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPubMed> <http://bio2rdf.org/pubmed:12335> .",
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPubMed> <http://bio2rdf.org/pubmed:54321> .",
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPubMed> <http://bio2rdf.org/pubmed:678910> ."]
@@ -68,21 +72,22 @@ end
 
 describe "Parsing other xrefs" do
   
+  before(:each) do
+    @record =  GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
+  end
+  
   it "should parse an entrez gene ID correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_ENTREZ_GENE("1234")
+    output = @record.process_ENTREZ_GENE("1234")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGeneID> <http://bio2rdf.org/geneid:1234> ."]
   end
   
   it "should parse a single UNIPROT correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_UNIPROT_ID("P12335")
+    output = @record.process_UNIPROT_ID("P12335")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:P12335> ."]
   end
   
   it "should parse a list of UNIPROT IDs correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_UNIPROT_ID("P12335,Q54321,P65432")
+    output = @record.process_UNIPROT_ID("P12335,Q54321,P65432")
     output.should == [
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:P12335> .",
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:Q54321> .",
@@ -91,20 +96,26 @@ describe "Parsing other xrefs" do
   end
   
    it "should parse a single ENSEMBL_ID correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_ENSEMBL_ID("ENSRNO12345678")
+    output = @record.process_ENSEMBL_ID("ENSRNO12345678")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xENSEMBL> <http://bio2rdf.org/ensembl:ENSRNO12345678> ."]
   end
   
-   it "should parse a single Genbank  correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_GENBANK("NP_036620")
+   it "should parse multiple ENSEMBL_ID correctly" do
+    output = @record.process_ENSEMBL_ID("ENSRNO12345678,ENSRNO12345679,ENSRNO12345680")
+    output.should == [
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xENSEMBL> <http://bio2rdf.org/ensembl:ENSRNO12345678> .",
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xENSEMBL> <http://bio2rdf.org/ensembl:ENSRNO12345679> .",
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xENSEMBL> <http://bio2rdf.org/ensembl:ENSRNO12345680> ."
+      ]
+  end
+  
+   it "should parse a single Genbank correctly" do
+    output = @record.process_GENBANK("NP_036620")
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGenBank> <http://bio2rdf.org/genbank:NP_036620> ."]
   end
   
   it "should parse multiple Genbank entries correctly" do
-    record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC","1000\tAbc1\tthe gene\tinfo about gene")
-    output = record.process_GENBANK("NP_036620,EDM02007,EDM02008")
+    output = @record.process_GENBANK("NP_036620,EDM02007,EDM02008")
     output.should == [
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGenBank> <http://bio2rdf.org/genbank:NP_036620> .",
       "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGenBank> <http://bio2rdf.org/genbank:EDM02007> .",
