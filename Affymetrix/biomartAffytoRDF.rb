@@ -18,8 +18,8 @@ File.open(file_name,"r") do |file|
     
       if !results[0].empty? && (results[1] != nil)
         # puts "rgd: #{results[0]}. probe: #{results[1]}."
-        puts "<http://bio2rdf.org/rgd:#{results[0]}> <http://bio2rdf.org/ns/bio2rdf#xAffymetrix> <http://bio2rdf.org/ns/affymetrix:#{results[1]}> ."
-        puts "<http://bio2rdf.org/affymetrix:#{results[0]}> <http://bio2rdf.org/ns/bio2rdf#partOf> <http://bio2rdf.org/ns/affymetrix:#{chip_set}> ."
+        puts "<http://bio2rdf.org/rgd:#{results[0]}> <http://bio2rdf.org/ns/bio2rdf#xAffymetrix> <http://bio2rdf.org/affymetrix:#{results[1]}> ."
+        puts "<http://bio2rdf.org/affymetrix:#{results[1]}> <http://bio2rdf.org/ns/bio2rdf#partOf> <http://bio2rdf.org/ns/affymetrix:#{chip_set}> ."
       end
     end
   end
