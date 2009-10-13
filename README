@@ -1,1 +1,3 @@
 This repository is being created to hold code and other materials related to the generation of RDF data from the Twigger group at the Medical College of Wisconsin (MCW). Our first area of interest is providing RDFizers for data produced by the Rat Genome Database (http://rgd.mcw.edu) so that it can be made available for others to use in the RDF format.
+
+Much of this work comes from our project with the National Center for Biomedical Ontology (http://bioontology.org) where we are also integrating NCBI's GEO gene expression data with the RGD gene data. To go along with this effort we are also building RDFizers for other datasets that we need, such as Affymetrix's probeset information.
