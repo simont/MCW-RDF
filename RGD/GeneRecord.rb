@@ -82,13 +82,15 @@ class GeneRecord
     output = Array.new
     output.push( [self.subject, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>", "<http://bio2rdf.org/ns/rgd#Gene>", "."].join(' ') )
     output.push( [self.subject, "<http://purl.org/dc/elements/1.1/identifier>", "\"rgd:#{@data['GENE_RGD_ID']}\"", "."].join(' ') )
-    output.push( [self.subject, "<http://www.w3.org/2002/07/owl#sameAs>", "<http://bio2rdf.org/rgd:#{@data['GENE_RGD_ID']}>", "."].join(' ') )
+    output.push( [self.subject, "<http://www.w3.org/2000/01/rdf-schema#label>", "\"#{@data['NAME']} (#{@data['SYMBOL']}) [rgd:#{@data['GENE_RGD_ID']}]\"", "."].join(' ') )
     return output
   end
   
   def process_SYMBOL(symbol)
     output = Array.new
     output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#symbol>", '"' << symbol << '"', "."].join(' ') )
+    output.push(["<http://bio2rdf.org/symbol:#{symbol}>","<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://bio2rdf.org/ns/bio2rdf#Symbol>", "."].join(' '))
+    output.push(["<http://bio2rdf.org/symbol:#{symbol}>", "<http://www.w3.org/2002/07/owl#sameAs>", self.subject, "."].join(' ') )
     return output
     
   end
@@ -134,7 +136,7 @@ class GeneRecord
   def process_UNIPROT_ID(unip)
      output = Array.new
      unip.split(',').each do |uid|
-       output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#xPath>", "<http://bio2rdf.org/uniprot:#{uid.strip}>", "."].join(' ') )
+       output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#xUniprot>", "<http://bio2rdf.org/uniprot:#{uid.strip}>", "."].join(' ') )
      end
      return output
    end

@@ -1,12 +1,9 @@
 #! /opt/local/bin/ruby
 
-
-
 require 'GeneRecord';
 
-# TO DO - Add your Modules, Classes, etc
+# TO DO - Add in option to FTP latest GENES file from RGD directly
 
-#parse file from command line
 
 file_name = ARGV[0] || "../spec/files/GENES_RAT.txt"
 

@@ -1,6 +1,8 @@
 # GeneRecord_spec.rb
 
 require File.dirname(__FILE__) + '/../RGD/GeneRecord'
+require 'rubygems'
+require 'curb'
 
 describe "GeneRecord data parsing" do
 
@@ -83,15 +85,15 @@ describe "Parsing other xrefs" do
   
   it "should parse a single UNIPROT correctly" do
     output = @record.process_UNIPROT_ID("P12335")
-    output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:P12335> ."]
+    output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xUniprot> <http://bio2rdf.org/uniprot:P12335> ."]
   end
   
   it "should parse a list of UNIPROT IDs correctly" do
     output = @record.process_UNIPROT_ID("P12335,Q54321,P65432")
     output.should == [
-      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:P12335> .",
-      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:Q54321> .",
-      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xPath> <http://bio2rdf.org/uniprot:P65432> .",
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xUniprot> <http://bio2rdf.org/uniprot:P12335> .",
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xUniprot> <http://bio2rdf.org/uniprot:Q54321> .",
+      "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xUniprot> <http://bio2rdf.org/uniprot:P65432> .",
       ]
   end
   
@@ -137,4 +139,17 @@ describe "it should put out ancilliary RDF too" do
     output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#subType> \"protein-coding\" ."]
   end
   
+  it "should put out appropriate info on names, symbols, etc." do
+     output = @record.process_GENE_RGD_ID('1000')
+      output.should == ["<http://bio2rdf.org/rgd:1000> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://bio2rdf.org/ns/rgd#Gene> .",
+      "<http://bio2rdf.org/rgd:1000> <http://purl.org/dc/elements/1.1/identifier> \"rgd:1000\" .",
+      "<http://bio2rdf.org/rgd:1000> <http://www.w3.org/2000/01/rdf-schema#label> \"the gene (Abc1) [rgd:1000]\" ."]
+  end
+  
+  it "should put out info about the symbol" do
+    output = @record.process_SYMBOL('Abc1')
+      output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#symbol> \"Abc1\" .",
+      "<http://bio2rdf.org/symbol:Abc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://bio2rdf.org/ns/bio2rdf#Symbol> .",
+      "<http://bio2rdf.org/symbol:Abc1> <http://www.w3.org/2002/07/owl#sameAs> <http://bio2rdf.org/rgd:1000> .",]
+  end
 end
