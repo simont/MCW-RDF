@@ -1,5 +1,7 @@
 #! /opt/local/bin/ruby
 
+# Very basic hack to take a tab delimted file such as those created by Biomart and convert
+# to some sort of RDF mapping Affy probsets to chips and to RGD IDs
 
 
 file_name = ARGV[0] || "../spec/files/biomartAffytoRDF_test.txt"
