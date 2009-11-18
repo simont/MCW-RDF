@@ -1,3 +1,5 @@
+require 'cgi'
+
 class GeneRecord
 
   attr_reader :raw_data, :data, :headers
@@ -35,18 +37,30 @@ class GeneRecord
   end
 
 
-  def to_rdf
+  def to_rdf(*fileField)
+
     output = Array.new
-    ['GENE_RGD_ID','SYMBOL','NAME','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN','GENE_TYPE'].each do |field|
-      output << process_field(field, data[field])
+    if fileField.empty?
+      ['GENE_RGD_ID','SYMBOL','NAME','CHROMOSOME_34','START_POS_34','STOP_POS_34', 'CURATED_REF_PUBMED_ID','ENTREZ_GENE', 'UNIPROT_ID', 'GENBANK_NUCLEOTIDE', 'GENBANK_PROTEIN','GENE_TYPE'].each do |field|
+        output << process_field(field, data[field])
+      end
+    else
+      fileField.each do |field|
+        output << process_field(field, data[field])   
+      end
     end
 
     return output.flatten.join("\n")
   end
   
-  def process_field(field, data)
+  def process_field(field, file_data)
     output = Array.new
-    if data != nil
+   
+    
+    if file_data != nil
+      
+      data = CGI::escapeHTML(file_data)
+      
       if field == "GENE_RGD_ID"
         output << process_GENE_RGD_ID(data)
       elsif field == "SYMBOL"

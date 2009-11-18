@@ -153,3 +153,14 @@ describe "it should put out ancilliary RDF too" do
       "<http://bio2rdf.org/symbol:Abc1> <http://www.w3.org/2002/07/owl#sameAs> <http://bio2rdf.org/rgd:1000> .",]
   end
 end
+
+describe "it should cope with non-standard entities" do
+  
+  before(:each) do
+    @record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC\rGENE_TYPE","1000\tAbc1(<sup>as</sup>)\tthe gene\tinfo about gene\tprotein-coding")
+  end  
+  
+  it "should put out info about the symbol and cope with HTML entities" do
+    @record.to_rdf('SYMBOL').should == "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#symbol> \"Abc1(&lt;sup&gt;as&lt;/sup&gt;)\" .\n<http://bio2rdf.org/symbol:Abc1(&lt;sup&gt;as&lt;/sup&gt;)> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://bio2rdf.org/ns/bio2rdf#Symbol> .\n<http://bio2rdf.org/symbol:Abc1(&lt;sup&gt;as&lt;/sup&gt;)> <http://www.w3.org/2002/07/owl#sameAs> <http://bio2rdf.org/rgd:1000> ."
+  end
+end
