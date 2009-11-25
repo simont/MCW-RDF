@@ -5,6 +5,15 @@ class RgdRecord
   
   attr_reader :raw_data, :data, :headers
 
+  # quick references table for the standard taxons we have to deal with at RGD.
+  TAXON = {'rattus norvegicus' => '10116',
+          'rat' => '10116',
+          'homo sapiens' => '9606',
+          'human' => '9606',
+          'mus musculus' => '10090',
+          'mouse' => '10090'
+          }
+
   def initialize(headers, data_row)
     @primary_id = ""
     @fields_to_parse = Array.new
@@ -53,6 +62,12 @@ class RgdRecord
      return output
 
    end
+   
+   def process_SPECIES(species)
+     output = Array.new
+     output.push( [self.subject, "<http://bio2rdf.org/ns/rgd#species>", "<http://bio2rdf.org/taxon:#{TAXON[species]}>", "."].join(' ') )
+     return output
+   end
 
    def process_NAME(name)
      output = Array.new
@@ -80,7 +95,7 @@ class RgdRecord
 
    def process_CURATED_REF_PUBMED_ID(pmids)
      output = Array.new
-     pmids.split(',').each do |pmid|
+     pmids.split(/,|;/).each do |pmid|
        output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#xPubMed>", "<http://bio2rdf.org/pubmed:#{pmid.strip}>", "."].join(' ') )
      end
      return output
@@ -100,6 +115,14 @@ class RgdRecord
          output.push( [self.subject, "<http://bio2rdf.org/ns/bio2rdf#xENSEMBL>", "<http://bio2rdf.org/ensembl:#{uid.strip}>", "."].join(' ') )
        end
        return output
+     end
+     
+     def process_STRAIN_RGD_IDS(strain_ids)
+       output = Array.new
+        strain_ids.split(';').each do |str|
+          output.push( [self.subject, "<http://bio2rdf.org/ns/rgd#strainUsed>", "<http://bio2rdf.org/rgd:#{str}>", "."].join(' ') )
+        end
+        return output
      end
   
 end
