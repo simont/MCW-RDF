@@ -1,8 +1,8 @@
 # GeneRecord_spec.rb
+require File.join(File.dirname(__FILE__), *%w[spec_helper])
+# require File.dirname(__FILE__) + '/../RGD/RgdRecord'
+# require File.dirname(__FILE__) + '/../RGD/GeneRecord'
 
-require File.dirname(__FILE__) + '/../RGD/GeneRecord'
-require 'rubygems'
-require 'curb'
 
 describe "GeneRecord data parsing" do
 
@@ -80,7 +80,7 @@ describe "Parsing other xrefs" do
   
   it "should parse an entrez gene ID correctly" do
     output = @record.process_ENTREZ_GENE("1234")
-    output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGeneID> <http://bio2rdf.org/geneid:1234> ."]
+    output.should == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/bio2rdf#xGeneID> <http://bio2rdf.org/geneid:1234> .", "<http://bio2rdf.org/rgd:1000> <http://www.w3.org/2002/07/owl#sameAs> <http://purl.org/commons/record/ncbi_gene/1234> ."]
   end
   
   it "should parse a single UNIPROT correctly" do
@@ -152,6 +152,22 @@ describe "it should put out ancilliary RDF too" do
       "<http://bio2rdf.org/symbol:Abc1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://bio2rdf.org/ns/bio2rdf#Symbol> .",
       "<http://bio2rdf.org/symbol:Abc1> <http://www.w3.org/2002/07/owl#sameAs> <http://bio2rdf.org/rgd:1000> .",]
   end
+end
+
+describe "It should type chromosome positions, etc. as integers" do
+  
+  
+  it "should return RDF with an integer typed literal" do
+    @record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC\tGENE_TYPE\tSTART_POS_34\tSTOP_POS_34","1000\tAbc1(<sup>as</sup>)\tthe gene\tinfo about gene\tprotein-coding\t1000000\t1200000")
+    @record.to_rdf('START_POS_34'). == ["<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/rgd#chromosome_34_Start> \"1000000\"^^xsd:int ."]
+  end
+  
+  it "should not have elements if there is no information" do
+    @record = GeneRecord.new("GENE_RGD_ID\tSYMBOL\tNAME\tGENE_DESC\tGENE_TYPE\tSTART_POS_34\tSTOP_POS_34","1000\tAbc1(<sup>as</sup>)\tthe gene\tinfo about gene\tprotein-coding\t\t123456")
+    @record.to_rdf('START_POS_34').should == ""
+    @record.to_rdf('STOP_POS_34').should == "<http://bio2rdf.org/rgd:1000> <http://bio2rdf.org/ns/rgd#chromosome_34_Stop> \"123456\" ."
+  end
+  
 end
 
 describe "it should cope with non-standard entities" do
