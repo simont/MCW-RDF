@@ -5,7 +5,7 @@ Much of this work comes from our project with the National Center for Biomedical
 Usage
 
 * To parse the RGD GENES FTP file found here: ftp://rgd.mcw.edu/pub/data_release/GENES_RAT
-=> ruby rgdGenesToRDF.rb gene GENES_RAT.txt > rgd_genes.rdf
+=> ruby rgdGenesToRDF.rb gene GENES_RAT > rgd_genes.rdf
 
 * To parse the RGD QTL FTP file found here: ftp://rgd.mcw.edu/pub/data_release/QTLS_RAT
 => ruby rgdGenesToRDF.rb qtl QTLS_RAT > rgd_qtls.rdf
