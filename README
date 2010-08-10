@@ -2,15 +2,15 @@ This repository is being created to hold code and other materials related to the
 
 Much of this work comes from our project with the National Center for Biomedical Ontology (http://bioontology.org) where we are also integrating NCBI's GEO gene expression data with the RGD gene data. To go along with this effort we are also building RDFizers for other datasets that we need, such as Affymetrix's probeset information.
 
-h3. Usage
+Usage
 
 * To parse the RGD GENES FTP file found here: ftp://rgd.mcw.edu/pub/data_release/GENES_RAT
-** ruby rgdGenesToRDF.rb genes GENES_RAT.txt > rgd_genes.rdf
+=> ruby rgdGenesToRDF.rb gene GENES_RAT.txt > rgd_genes.rdf
 
 * To parse the RGD QTL FTP file found here: ftp://rgd.mcw.edu/pub/data_release/QTLS_RAT
-** ruby rgdGenesToRDF.rb qtls QTLS_RAT > rgd_qtls.rdf
+=> ruby rgdGenesToRDF.rb qtl QTLS_RAT > rgd_qtls.rdf
 
 
-h3. TODO
+TODO
 
 * rename or create new primary script to parse files, it doesn't make much sense have a rgdGenesToRDF.rb file parse QTLs too.
